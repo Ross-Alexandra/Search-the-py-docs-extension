@@ -1,0 +1,5 @@
+# Ensure a zipped version of the repo is not added to the repo
+*.zip
+
+# Ensure any shell scripts dont make their way to the repo.
+*.sh
