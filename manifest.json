@@ -3,13 +3,19 @@
 
 	"name": "pydocs version loader",
 	"description": "An extension to load your prefered version of the python docs",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"permissions": [
-		"storage"
+		"storage",
+		"webNavigation"
 	],
 
 	"options_ui": {
 		"page": "options.html",
 		"open_in_tab": false
+	},
+
+	"background": {
+		"scripts": ["background.js"],
+		"persistent": false
 	}
 }
