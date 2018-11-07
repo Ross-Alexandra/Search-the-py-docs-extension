@@ -28,8 +28,8 @@ function restore_options() {
 	// Default is 3.0.0 and do_redirect = false
 	chrome.storage.sync.get({
 		pythonVersion: "3.0.0",
-		doRedirect: false,
-		doWarnRedirect: true
+		doRedirect: true,
+		doWarnRedirect: false
 	}, function(items) {
 		var python_versions = items.pythonVersion.split(".");
 
