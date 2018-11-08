@@ -3,7 +3,7 @@
 
 	"name": "pydocs version loader",
 	"description": "An extension to load your prefered version of the python docs",
-	"version": "0.4.0",
+	"version": "0.4.1",
 	"permissions": [
 		"storage",
 		"webRequest",
