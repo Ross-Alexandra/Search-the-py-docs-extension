@@ -6,12 +6,12 @@ chrome.storage.sync.get({
 	}, function(data) {
 
 		storageCache = data;
-		var most_recent_request = "";
-		var original_request = "";
+		var most_recent_request = "No request yet made.";
+		var original_request = "No request yet made.";
 
 		// On the inital request, load the user's prefered version of
 		// python.
-		chrome.webRequest.onBeforeRequest.addListener(function(details) {
+		chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
 
 			var split_url = details.url.split("/");
 
@@ -37,11 +37,15 @@ chrome.storage.sync.get({
 					var confirm_message = "You are about to be redirected to a python " + split_url[3] + " doc page instead of a python " + original_request + " page, are you sure you would like to be redirected?"
 
 					if (confirm(confirm_message)) {
-						return {redirectUrl: split_url.join("/")};
+	    					chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        						chrome.tabs.update(tabs[0].id, {url: split_url.join("/")});
+						});
 					}
 				}
 				else {
-					return {redirectUrl: split_url.join("/")};
+   					chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+      						chrome.tabs.update(tabs[0].id, {url: split_url.join("/")});
+					});
 				}
 			}
 		},	{
@@ -89,15 +93,15 @@ chrome.storage.sync.get({
 						most_recent_request = original_request;
 						split_url[3] = original_request;
 						chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        					chrome.tabs.update(tabs[0].id, {url: split_url.join("/")});
-    					});
+        						chrome.tabs.update(tabs[0].id, {url: split_url.join("/")});
+    						});
 					}
 					else {
 						most_recent_request = split_url[3];
 
 	    					chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        					chrome.tabs.update(tabs[0].id, {url: split_url.join("/")});
-    					});
+        						chrome.tabs.update(tabs[0].id, {url: split_url.join("/")});
+    						});
 					}
 				}, 25);
 			}
