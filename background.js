@@ -33,7 +33,16 @@ chrome.storage.sync.get({
 				most_recent_request = split_url[3]
 				original_request = details.url.split("/")[3];
 
-				return {redirectUrl: split_url.join("/")};
+				if (storageCache.warnRedirect) {
+					var confirm_message = "You are about to be redirected to a python " + split_url[3] + " doc page instead of a python " + original_request + " page, are you sure you would like to be redirected?"
+
+					if (confirm(confirm_message)) {
+						return {redirectUrl: split_url.join("/")};
+					}
+				}
+				else {
+					return {redirectUrl: split_url.join("/")};
+				}
 			}
 		},	{
 				urls: [
