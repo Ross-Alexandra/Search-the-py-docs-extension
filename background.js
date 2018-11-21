@@ -18,6 +18,12 @@ chrome.storage.sync.get({
 
 			// The 4th position in the url is the python version.
 			split_url[3] = storageCache["pythonVersion"];
+			while (split_url[3].endsWith(".0")) {
+
+				// slice from the first character, to the third-to-last
+				// character.
+				split_url[3] = split_url[3].slice(0, split_url[3].lastIndexOf(".0"));
+			}
 
 			// If this request wasn't the most recent request
 			if (details.url.split("/")[3] != most_recent_request) {
@@ -27,6 +33,9 @@ chrome.storage.sync.get({
 				// stored in the user's preferences.
 				most_recent_request = split_url[3]
 				original_request = details.url.split("/")[3];
+
+				alert("Redirecting from " + original_request + " to " + most_recent_request);
+
 				return {redirectUrl: split_url.join("/")};
 			}
 		},	{
@@ -47,6 +56,14 @@ chrome.storage.sync.get({
 				var split_url = details.url.split("/");
 				var last_version_specifier = split_url[3].lastIndexOf(".");
 
+				while (split_url[3].endsWith(".0")) {
+
+					// slice from the first character, to the third-to-last
+					// character.
+					split_url[3] = split_url[3].slice(0, split_url[3].lastIndexOf(".0"));
+				}
+
+
 				// Because this page 404'ed, we need to go the the next sub
 				// version. Ex, if 3.7.1 failed, try 3.7
 				split_url[3] = split_url[3].slice(0, last_version_specifier);
@@ -60,6 +77,7 @@ chrome.storage.sync.get({
 					// that 404's, go to 1.1, that fails, go to 1, that fails, give
 					// up and return to 3.0
 					if (split_url[3] == "") {
+						alert("Ran out of sub-versions, redirecting back to " + original_request);
 						most_recent_request = original_request;
 						split_url[3] = original_request;
 						chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -67,9 +85,11 @@ chrome.storage.sync.get({
     					});
 					}
 					else {
+						alert("redirectiong from " + most_recent_request + " to " + split_url[3]);
+
 						most_recent_request = split_url[3];
 
-    					chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+	    					chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
         					chrome.tabs.update(tabs[0].id, {url: split_url.join("/")});
     					});
 					}
