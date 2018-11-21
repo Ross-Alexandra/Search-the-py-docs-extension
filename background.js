@@ -1,9 +1,7 @@
 var storageCache = {};
 
 chrome.storage.sync.get({
-	pythonVersion: "3.0.0",
-	doRedirect: true,
-	doWarnRedirect: false
+	pythonVersion: "3.0.0"
 	}, function(data) {
 
 		storageCache = data;
