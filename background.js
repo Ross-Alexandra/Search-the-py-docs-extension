@@ -89,7 +89,7 @@ chrome.storage.sync.get({
         					chrome.tabs.update(tabs[0].id, {url: split_url.join("/")});
     					});
 					}
-				}, 10);
+				}, 25);
 			}
 		},	{
 
