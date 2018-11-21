@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById('ok_button').onclick = searchDocs;
 
-	document.getElementById('searchQuery').onkeydown = isKeyEnter;
-	document.onkeydown = isKeyEnter;
+	document.getElementById('searchQuery').onkeydown = searchIfEnter;
+	document.onkeydown = searchIfEnter;
 });
 
-function isKeyEnter(event) {
+function searchIfEnter(event) {
 	if (event.keycode == 13) {
 		searchDocs();
 	}
