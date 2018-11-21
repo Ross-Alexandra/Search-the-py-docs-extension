@@ -4,8 +4,11 @@ function save_options() {
 	python_version.push(document.getElementById("subPyVer").value);
 	python_version.push(document.getElementById("buildPyVer").value);
 
+	var warnRedirect = document.getElementById("warnRedirect").checked;
+
 	chrome.storage.sync.set({
-		pythonVersion: python_version.join(".")
+		pythonVersion: python_version.join("."),
+		warnRedirect: warnRedirect
 	}, function() {
 
 		//update status to let users know options were saved.
@@ -23,13 +26,16 @@ function restore_options() {
 
 	// Default is 3.0.0
 	chrome.storage.sync.get({
-		pythonVersion: "3.0.0"
+		pythonVersion: "3.0.0",
+		warnRedirect: false
 	}, function(items) {
 		var python_versions = items.pythonVersion.split(".");
 
 		document.getElementById("mainPyVer").value = python_versions[0];
 		document.getElementById("subPyVer").value = python_versions[1];
 		document.getElementById("buildPyVer").value = python_versions[2];
+
+		document.getElementById("warnRedirect").checked = items.warnRedirect;
 	});
 }
 
