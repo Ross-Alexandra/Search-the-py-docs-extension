@@ -32,8 +32,6 @@ chrome.storage.sync.get({
 				most_recent_request = split_url[3]
 				original_request = details.url.split("/")[3];
 
-				alert("Redirecting from " + original_request + " to " + most_recent_request);
-
 				return {redirectUrl: split_url.join("/")};
 			}
 		},	{
@@ -54,6 +52,13 @@ chrome.storage.sync.get({
 				var split_url = details.url.split("/");
 				var last_version_specifier = split_url[3].lastIndexOf(".");
 
+				// Because this page 404'ed, we need to go the the next sub
+				// version. Ex, if 3.7.1 failed, try 3.7
+				split_url[3] = split_url[3].slice(0, last_version_specifier);
+
+				// incase the version specified matches something along
+				// the lines of 3.0.8, if 3.0.8 404's, cut off the .8, then
+				// cut off the .0, going directly from 3.0.8 to 3.
 				while (split_url[3].endsWith(".0")) {
 
 					// slice from the first character, to the third-to-last
@@ -61,10 +66,6 @@ chrome.storage.sync.get({
 					split_url[3] = split_url[3].slice(0, split_url[3].lastIndexOf(".0"));
 				}
 
-
-				// Because this page 404'ed, we need to go the the next sub
-				// version. Ex, if 3.7.1 failed, try 3.7
-				split_url[3] = split_url[3].slice(0, last_version_specifier);
 
 				// Set a timeout for 10ms as we must wait a short period of time
 				// otherwise this request will get overshadowed (for unknown reasons.)
@@ -75,7 +76,6 @@ chrome.storage.sync.get({
 					// that 404's, go to 1.1, that fails, go to 1, that fails, give
 					// up and return to 3.0
 					if (split_url[3] == "") {
-						alert("Ran out of sub-versions, redirecting back to " + original_request);
 						most_recent_request = original_request;
 						split_url[3] = original_request;
 						chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -83,8 +83,6 @@ chrome.storage.sync.get({
     					});
 					}
 					else {
-						alert("redirectiong from " + most_recent_request + " to " + split_url[3]);
-
 						most_recent_request = split_url[3];
 
 	    					chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
